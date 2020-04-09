@@ -1,0 +1,18 @@
+INFO  16:53:59,615 [dpp-connect-auto] (?:?) Starting Saros 15.0.0 running:
+  Java Version: 1.8.0_221
+  Java Vendor: Oracle Corporation
+  Eclipse Runtime Version: 3.15.300.v20190508-0543
+  Operating System: Windows 10 (10.0)
+  Hardware Architecture: amd64
+INFO  16:53:59,655 [dpp-connect-auto] (?:?) initializing context...
+INFO  16:54:00,839 [dpp-connect-auto] (?:?) initializing preference default values
+INFO  16:54:00,901 [dpp-connect-auto] (?:?) successfully initialized context
+ERROR 16:54:18,235 [dpp-connect-auto] (?:?) error sending STUN request
+java.net.SocketException: Network is unreachable: Datagram send failed
+	at java.net.DualStackPlainDatagramSocketImpl.socketSend(Native Method)
+	at java.net.DualStackPlainDatagramSocketImpl.send(Unknown Source)
+	at java.net.DatagramSocket.send(Unknown Source)
+	at saros.net.stun.internal.StunServiceImpl$StunDiscovery$1.run(StunServiceImpl.java:233)
+	at java.lang.Thread.run(Unknown Source)
+WARN  16:54:28,234 [StunDiscovery-192.168.56.1] (StunServiceImpl.java:384) received no response from STUN server stunserver.org/67.227.226.240:3478 at local address /192.168.56.1:0
+WARN  16:54:28,234 [StunDiscovery-192.168.1.11] (StunServiceImpl.java:384) received no response from STUN server stunserver.org/67.227.226.240:3478 at local address /192.168.1.11:0
