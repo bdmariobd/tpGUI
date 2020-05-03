@@ -25,11 +25,13 @@ import javax.swing.SpinnerNumberModel;
 import simulator.control.Controller;
 import simulator.exceptions.IncorrectValues;
 import simulator.misc.Pair;
+import simulator.model.Event;
 import simulator.model.NewSetContClassEvent;
 import simulator.model.RoadMap;
+import simulator.model.TrafficSimObserver;
 import simulator.model.simulatedOBJ.Vehicle;
 
-public class ChangeCO2ClassDialog extends JDialog implements ActionListener {
+public class ChangeCO2ClassDialog extends JDialog implements ActionListener, TrafficSimObserver {
 	
 	private JButton btnOk, btnCancel;
 	private Controller ctrl;
@@ -37,9 +39,11 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener {
 	private JComboBox cbCO2;
 	private JSpinner spinbox;
 	private JPanel p, pBotonera, pCentro;
+	private List<Vehicle> ve;
 	
 	public ChangeCO2ClassDialog(Controller ctrl) {
 		// dsp de meterlista
+		ctrl.addObserver(this);
 		p= new JPanel(new BorderLayout());
 		p.setVisible(true);
 		this.setContentPane(p);
@@ -76,7 +80,6 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener {
 		JLabel j= new JLabel("Vehicles");
 		j.setLabelFor(cbV);
 		j.setVisible(true);
-		List<Vehicle>ve= ctrl.getVehicles();
 		List<String>l= new ArrayList<String>();
 		for(Vehicle v: ve) l.add(v.getId());
 		cbV=new JComboBox<Object>(l.toArray());
@@ -128,10 +131,10 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener {
 			try {
 				NewSetContClassEvent e = new NewSetContClassEvent(this.getTime()+ ctrl.getTimeTick(),cs);
 				ctrl.addEvent(e);
-				JOptionPane.showMessageDialog(null,"Buenarda marselo","Info",JOptionPane.INFORMATION_MESSAGE); // TODO Este mensaje no tira, comprobar carga del ficheiro
+				JOptionPane.showMessageDialog(null,"Añadido con éxito","Info",JOptionPane.INFORMATION_MESSAGE); // TODO Este mensaje no tira, comprobar carga del ficheiro
 				
 			} catch (IncorrectValues e) {
-				JOptionPane.showMessageDialog(null, "No ha habido carga de ficheiro", "ERROR PEDASO DE PELOTUDO", JOptionPane.WARNING_MESSAGE); // TODO Comprobar la carguita
+				JOptionPane.showMessageDialog(null, "No ha habido carga de fichero", "ERROR", JOptionPane.WARNING_MESSAGE); // TODO Comprobar la carguita
 			}
 			finally {
 				this.dispose();
@@ -140,5 +143,35 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener {
 		else if (arg0.getActionCommand()=="Cancel") {
 			this.dispose();
 		}
+	}
+	@Override
+	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+		ve=map.getVehicles();
+	}
+	@Override
+	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
+		// TODO Auto-generated method stub
+		ve=map.getVehicles();
+	}
+	@Override
+	public void onReset(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+		ve=map.getVehicles();
+	}
+	@Override
+	public void onRegister(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+		ve=map.getVehicles();
+	}
+	@Override
+	public void onError(String err) {
+		// TODO Auto-generated method stub
+		
 	}
 }

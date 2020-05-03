@@ -60,7 +60,7 @@ public class MapComponent extends JPanel implements TrafficSimObserver {
 
 		if (_map == null || _map.getJunctions().size() == 0) {
 			g.setColor(Color.red);
-			g.drawString("Nothing loaded cunt!", getWidth() / 2 - 50, getHeight() / 2);
+			g.drawString("Nothing loaded!", getWidth() / 2 - 50, getHeight() / 2);
 		} else {
 			updatePrefferedSize();
 			drawMap(g);

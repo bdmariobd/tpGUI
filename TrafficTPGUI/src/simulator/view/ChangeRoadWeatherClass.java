@@ -19,13 +19,16 @@ import javax.swing.SpinnerNumberModel;
 import simulator.control.Controller;
 import simulator.exceptions.IncorrectValues;
 import simulator.misc.Pair;
+import simulator.model.Event;
 import simulator.model.NewSetContClassEvent;
+import simulator.model.RoadMap;
 import simulator.model.SetWeatherEvent;
+import simulator.model.TrafficSimObserver;
 import simulator.model.Weather;
 import simulator.model.simulatedOBJ.Road;
 import simulator.model.simulatedOBJ.Vehicle;
 
-public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
+public class ChangeRoadWeatherClass extends JDialog implements ActionListener,TrafficSimObserver{
 
 	
 	private JButton btnOk, btnCancel;
@@ -34,9 +37,11 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
 	private JComboBox cbWeathers;
 	private JSpinner spinbox;
 	private JPanel p, pBotonera, pCentro;
+	private List<Road>rd;
 	
 	public ChangeRoadWeatherClass(Controller ctrl) {
 		// dsp de meterlista
+		ctrl.addObserver(this);
 		p= new JPanel(new BorderLayout());
 		p.setVisible(true);
 		this.setContentPane(p);
@@ -73,7 +78,6 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
 		JLabel j= new JLabel("Road: ");
 		j.setLabelFor(cbRoads);
 		j.setVisible(true);
-		List<Road>rd= ctrl.getRoads();
 		List<String>r= new ArrayList<String>();
 		for(Road i: rd) r.add(i.getId());
 		cbRoads=new JComboBox<Object>(r.toArray());
@@ -127,7 +131,7 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
 				JOptionPane.showMessageDialog(null,"Success","Info",JOptionPane.INFORMATION_MESSAGE); // TODO Este mensaje no tira, comprobar carga del ficheiro
 				
 			} catch (IncorrectValues e) {
-				JOptionPane.showMessageDialog(null, "No ha habido carga de ficheiro", "ERROR PEDASO DE PELOTUDO", JOptionPane.WARNING_MESSAGE); // TODO Comprobar la carguita
+				JOptionPane.showMessageDialog(null, "No ha habido carga de fichero", "ERROR ", JOptionPane.WARNING_MESSAGE); // TODO Comprobar la carguita
 			}
 			finally {
 				this.dispose();
@@ -136,6 +140,35 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
 		else if (arg0.getActionCommand()=="Cancel") {
 			this.dispose();
 		}
+	}
+	@Override
+	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
+		
+		
+	}
+	@Override
+	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
+		rd=map.getRoads();
+		
+	}
+	@Override
+	public void onReset(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onRegister(RoadMap map, List<Event> events, int time) {
+		rd=map.getRoads();
+	}
+	@Override
+	public void onError(String err) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 
