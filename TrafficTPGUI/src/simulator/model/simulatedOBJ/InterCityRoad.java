@@ -11,7 +11,7 @@ public class InterCityRoad extends Road {
 		super(id, srcJunc, destJunc, maxSpeed, contLimit, length, weather);
 	}
 	void reduceTotalContamination() {
-		setTotalCont((int)Math.ceil((100.0-getWeather().getContInterCity())/100.0)*getTotalCont());
+		setTotalCont((int) ((100.0-getWeather().getContInterCity())/100.0*getTotalCont()));
 	}
 	@Override
 	void updateSpeedLimit() {

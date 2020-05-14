@@ -1,6 +1,5 @@
 package simulator.model.simulatedOBJ;
 
-import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,15 +23,15 @@ public class Junction extends SimulatedObject {
 	private LightSwitchingStrategy lStrategy;
 	private DequeuingStrategy dqStrategy;
 	private Map<Road, List<Vehicle>> entryRoadAndQueue;
-	int x,y;
+	int x,y; // coords para dibujar en la próxima práctica. UNUSED;
 	public Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqeStrategy, int xCoor, int yCoor) throws IncorrectValues{ 
 		super(id);
 		if(lsStrategy==null || dqeStrategy==null) throw new IncorrectValues("La estrategia es null");
 		if(xCoor<0 || yCoor<0)throw new IncorrectValues("Coordenadas negativas");
-		this.lStrategy=lsStrategy;
-		this.dqStrategy=dqeStrategy;
 		x=xCoor;
 		y=yCoor;
+		this.lStrategy=lsStrategy;
+		this.dqStrategy=dqeStrategy;
 		entryRoads= new ArrayList<Road>();
 		exitRoads= new HashMap<Junction,Road>();
 		entryRoadAndQueue= new HashMap<Road,List<Vehicle>>();
@@ -106,6 +105,23 @@ public class Junction extends SimulatedObject {
 		return jo;
 	}
 
+	public String getQueuesToString() {
+		// TODO Auto-generated method stub
+		if(entryRoads.isEmpty()) return "";
+		String list="";
+		for(Road i:entryRoads) {
+			list+= i.getId() + ":[";
+			for(Vehicle j: entryRoadAndQueue.get(i)) {
+				list+=j.getId() +" ";
+			}
+			list+="] ";
+		}
+		return list;
+	}
+	public String getRoadsOnGreen() {
+		if(gLight ==-1) return "NONE";
+		return entryRoads.get(gLight).getId();
+	}
 	public int getX() {
 		// TODO Auto-generated method stub
 		return x;
@@ -125,25 +141,5 @@ public class Junction extends SimulatedObject {
 		// TODO Auto-generated method stub
 		return entryRoads;
 	}
-
-	public String getRoadsOnGreen() {
-		if(gLight ==-1) return "NONE";
-		return entryRoads.get(gLight).getId();
-	}
-
-	public String getQueuesToString() {
-		// TODO Auto-generated method stub
-		if(entryRoads.isEmpty()) return "";
-		String list="";
-		for(Road i:entryRoads) {
-			list+= i.getId() + ":[";
-			for(Vehicle j: entryRoadAndQueue.get(i)) {
-				list+=j.getId() +" ";
-			}
-			list+="] ";
-		}
-		return list;
-	}
-
 
 }
