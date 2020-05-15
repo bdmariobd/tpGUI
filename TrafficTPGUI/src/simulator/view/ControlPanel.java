@@ -178,7 +178,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 				@Override
 				public void run() {
 					run_sim(n - 1);
-					//TODO capturar excepcion
 				    try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
@@ -252,7 +251,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	@Override
 	public void onError(String err) {
-		// TODO Auto-generated method stub
+		JOptionPane.showMessageDialog(null, "Se ha producido un error inesperado("+err+")", "ERROR",  JOptionPane.WARNING_MESSAGE);
 	}
 	private void enableToolBar(boolean b) {
 		carga.setEnabled(b);

@@ -64,7 +64,6 @@ public class RoadMap {
 	public List<Junction>getJunctions(){
 		return Collections.unmodifiableList(lJunc);	
 	}
-	//TODO Revisar estas listas q hice copiar y pegar
 	public List<Road>getRoads(){
 		return Collections.unmodifiableList(lRoad);
 	};

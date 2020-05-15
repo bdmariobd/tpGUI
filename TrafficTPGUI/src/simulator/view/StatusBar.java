@@ -13,8 +13,6 @@ import simulator.model.Event;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
 
-// TODO rayita de sote en una fiesta
-
 public class StatusBar extends JPanel implements TrafficSimObserver{
 
 	/**
@@ -24,7 +22,6 @@ public class StatusBar extends JPanel implements TrafficSimObserver{
 	private JLabel tbTicks, tbEvents;
 	public StatusBar(Controller c) {
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
 		tbTicks=new JLabel();
 		tbEvents=new JLabel();
 		tbTicks.setVisible(true);
@@ -56,7 +53,7 @@ public class StatusBar extends JPanel implements TrafficSimObserver{
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
 		// TODO Auto-generated method stub
-		
+		tbTicks.setText("Time: " + time);
 	}
 
 	@Override
@@ -68,7 +65,6 @@ public class StatusBar extends JPanel implements TrafficSimObserver{
 	@Override
 	public void onError(String err) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

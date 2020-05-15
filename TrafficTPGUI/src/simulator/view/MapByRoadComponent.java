@@ -42,7 +42,7 @@ public class MapByRoadComponent extends JComponent implements TrafficSimObserver
 	private Image cont1; //Amarillo;
 	private Image cont2; //Naranja;
 	private Image cont3; // roja enfadao
-	private Image cont4; // nivel almeida
+	private Image cont4; // nivel mas enfadao
 	private Image cont5; // nivel coronavairus
 	private Image rain,wind,sun,storm,cloud;
 

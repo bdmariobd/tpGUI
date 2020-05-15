@@ -37,20 +37,28 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 			Event e=i.next();
 			if(e._time==timeTick) {
 				i.remove();  // Borrar elementos de una lista es borrar el iterador.
-				e.execute(roadsMap);
+				try {e.execute(roadsMap);}
+				catch(IncorrectValues err) {for(TrafficSimObserver obs : tsObsList) obs.onError(err.getMessage());}
 			}
 		}
 		List<Junction> juncs=roadsMap.getJunctions();
 		Iterator<Junction> j= juncs.iterator();
 		while(j.hasNext()) {
-			Junction aux=j.next();
-			aux.advance(timeTick);
+			try {
+				Junction aux=j.next();
+				aux.advance(timeTick);
+			}
+			catch(IncorrectValues err) {for(TrafficSimObserver obs : tsObsList) obs.onError(err.getMessage());throw err;}
+			
 		}
 		List<Road> roads=roadsMap.getRoads();
 		Iterator<Road> r= roads.iterator();
 		while(r.hasNext()) {
-			Road aux=r.next();
-			aux.advance(timeTick);
+			try {
+				Road aux=r.next();
+				aux.advance(timeTick);
+			}
+			catch(IncorrectValues err) {for(TrafficSimObserver obs : tsObsList) obs.onError(err.getMessage());throw err;}
 		}	
 		for(TrafficSimObserver i : tsObsList) i.onAdvanceEnd(roadsMap, eventList,timeTick);
 	}
@@ -78,19 +86,7 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 	@Override
 	public void removeObserver(TrafficSimObserver o) {
 		// TODO Auto-generated method stub
-		
+		tsObsList.remove(o);
 	}
-	public List<Vehicle>getVehicles(){
-		return roadsMap.getVehicles();
-	}
-
-	public int getTimeTick() {
-		return timeTick;
-	}
-
-	public List<Road> getRoads() {
-		// TODO Auto-generated method stub
-		return roadsMap.getRoads();
-	};
 	
 }

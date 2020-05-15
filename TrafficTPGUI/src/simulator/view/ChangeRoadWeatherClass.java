@@ -130,10 +130,10 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
 			try {
 				SetWeatherEvent e = new SetWeatherEvent(this.getTime()+ time,cs);
 				ctrl.addEvent(e);
-				JOptionPane.showMessageDialog(null,"Success","Info",JOptionPane.INFORMATION_MESSAGE); // TODO Este mensaje no tira, comprobar carga del ficheiro
+				JOptionPane.showMessageDialog(null,"Success","Info",JOptionPane.INFORMATION_MESSAGE); 
 				
 			} catch (IncorrectValues e) {
-				JOptionPane.showMessageDialog(null, "No ha habido carga de fichero", "ERROR ", JOptionPane.WARNING_MESSAGE); // TODO Comprobar la carguita
+				JOptionPane.showMessageDialog(null, "No ha habido carga de fichero", "ERROR ", JOptionPane.WARNING_MESSAGE); 
 			}
 			finally {
 				this.dispose();

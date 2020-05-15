@@ -15,7 +15,7 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 private static final long serialVersionUID = 1L;
 	
 	private List<Junction> _Junctions;
-	private String[] _colNames = {"Id", "Green","Queueueue" };
+	private String[] _colNames = {"Id", "Green","Queues" };
 
 	public JunctionsTableModel() {
 		_Junctions=null;
@@ -84,7 +84,6 @@ private static final long serialVersionUID = 1L;
 			s = _Junctions.get(rowIndex).getId();
 			break;
 		case 1:
-		// buah me da pereza
 			s= _Junctions.get(rowIndex).getRoadsOnGreen();
 			break;
 		
