@@ -9,7 +9,6 @@ import simulator.model.Event;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
 import simulator.model.simulatedOBJ.Junction;
-import simulator.model.simulatedOBJ.Vehicle;
 
 public class JunctionsTableModel extends AbstractTableModel implements TrafficSimObserver {
 

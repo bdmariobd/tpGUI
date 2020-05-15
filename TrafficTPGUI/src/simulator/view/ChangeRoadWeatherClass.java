@@ -19,29 +19,31 @@ import javax.swing.SpinnerNumberModel;
 import simulator.control.Controller;
 import simulator.exceptions.IncorrectValues;
 import simulator.misc.Pair;
-import simulator.model.Event;
-import simulator.model.NewSetContClassEvent;
-import simulator.model.RoadMap;
+
 import simulator.model.SetWeatherEvent;
-import simulator.model.TrafficSimObserver;
 import simulator.model.Weather;
 import simulator.model.simulatedOBJ.Road;
-import simulator.model.simulatedOBJ.Vehicle;
 
-public class ChangeRoadWeatherClass extends JDialog implements ActionListener,TrafficSimObserver{
+public class ChangeRoadWeatherClass extends JDialog implements ActionListener{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btnOk, btnCancel;
 	private Controller ctrl;
-	private JComboBox cbRoads;
-	private JComboBox cbWeathers;
+	private JComboBox<Object> cbRoads;
+	private JComboBox<Object> cbWeathers;
 	private JSpinner spinbox;
 	private JPanel p, pBotonera, pCentro;
 	private List<Road>rd;
+	private int time;
 	
-	public ChangeRoadWeatherClass(Controller ctrl) {
+	public ChangeRoadWeatherClass(Controller ctrl, List<Road> rd, int time) {
 		// dsp de meterlista
-		ctrl.addObserver(this);
+		this.rd=rd;
+		this.time=time;
 		p= new JPanel(new BorderLayout());
 		p.setVisible(true);
 		this.setContentPane(p);
@@ -89,7 +91,7 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener,Tr
 		JLabel j=new JLabel("Weather:");
 		j.setLabelFor(cbWeathers);
 		j.setVisible(true);
-		cbWeathers=new JComboBox(Weather.values());
+		cbWeathers=new JComboBox<Object>(Weather.values());
 		JPanel pComboBoxCont= new JPanel(new FlowLayout());
 		pComboBoxCont.setVisible(true);
 		pComboBoxCont.add(j);
@@ -126,7 +128,7 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener,Tr
 			List<Pair<String,Weather>> cs= new ArrayList<Pair<String,Weather>>();
 			cs.add(new Pair<String,Weather> (this.getRoad(),this.getWeather()));
 			try {
-				SetWeatherEvent e = new SetWeatherEvent(this.getTime()+ ctrl.getTimeTick(),cs);
+				SetWeatherEvent e = new SetWeatherEvent(this.getTime()+ time,cs);
 				ctrl.addEvent(e);
 				JOptionPane.showMessageDialog(null,"Success","Info",JOptionPane.INFORMATION_MESSAGE); // TODO Este mensaje no tira, comprobar carga del ficheiro
 				
@@ -140,35 +142,6 @@ public class ChangeRoadWeatherClass extends JDialog implements ActionListener,Tr
 		else if (arg0.getActionCommand()=="Cancel") {
 			this.dispose();
 		}
-	}
-	@Override
-	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		
-		
-	}
-	@Override
-	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		rd=map.getRoads();
-		
-	}
-	@Override
-	public void onReset(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void onRegister(RoadMap map, List<Event> events, int time) {
-		rd=map.getRoads();
-	}
-	@Override
-	public void onError(String err) {
-		// TODO Auto-generated method stub
-		
 	}
 }
 

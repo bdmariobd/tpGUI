@@ -3,8 +3,6 @@ package simulator.view;
 
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,42 +13,43 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-
 import simulator.control.Controller;
 import simulator.exceptions.IncorrectValues;
 import simulator.misc.Pair;
-import simulator.model.Event;
+
 import simulator.model.NewSetContClassEvent;
-import simulator.model.RoadMap;
-import simulator.model.TrafficSimObserver;
+
 import simulator.model.simulatedOBJ.Vehicle;
 
-public class ChangeCO2ClassDialog extends JDialog implements ActionListener, TrafficSimObserver {
+public class ChangeCO2ClassDialog extends JDialog implements ActionListener{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btnOk, btnCancel;
 	private Controller ctrl;
-	private JComboBox cbV;
-	private JComboBox cbCO2;
+	private JComboBox<Object> cbV;
+	private JComboBox<Integer> cbCO2;
 	private JSpinner spinbox;
 	private JPanel p, pBotonera, pCentro;
 	private List<Vehicle> ve;
+	private int time;
 	
-	public ChangeCO2ClassDialog(Controller ctrl) {
-		// dsp de meterlista
-		ctrl.addObserver(this);
+	public ChangeCO2ClassDialog(Controller ctrl, List<Vehicle> ve, int time) {
 		p= new JPanel(new BorderLayout());
 		p.setVisible(true);
 		this.setContentPane(p);
 		JLabel enunciao=new JLabel("Schedule an event to change the CO2 class of a vehicle after a given number of simulation ticks from now.");
 		enunciao.setVisible(true);
 		p.add(enunciao,BorderLayout.NORTH);
+		this.time=time;
 		this.ctrl=ctrl;
+		this.ve=ve;
 		pCentro= new JPanel(new FlowLayout());
 		initComboBoxVehicleSelect();
 		initComboBox();
@@ -92,7 +91,7 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener, Tra
 		j.setLabelFor(cbCO2);
 		j.setVisible(true);
 		Integer [] types = {1,2,3,4,5,6,7,8,9,10};
-		cbCO2=new JComboBox(types);
+		cbCO2=new JComboBox<Integer>(types);
 		JPanel pComboBoxCont= new JPanel(new FlowLayout());
 		pComboBoxCont.setVisible(true);
 		pComboBoxCont.add(j);
@@ -129,7 +128,7 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener, Tra
 			List<Pair<String,Integer>> cs= new ArrayList<Pair<String,Integer>>();
 			cs.add(new Pair<String,Integer> (this.getVehicle(),this.getContClass()));
 			try {
-				NewSetContClassEvent e = new NewSetContClassEvent(this.getTime()+ ctrl.getTimeTick(),cs);
+				NewSetContClassEvent e = new NewSetContClassEvent(this.getTime()+ time,cs);
 				ctrl.addEvent(e);
 				JOptionPane.showMessageDialog(null,"Añadido con éxito","Info",JOptionPane.INFORMATION_MESSAGE); // TODO Este mensaje no tira, comprobar carga del ficheiro
 				
@@ -144,34 +143,5 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener, Tra
 			this.dispose();
 		}
 	}
-	@Override
-	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-		ve=map.getVehicles();
-	}
-	@Override
-	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		// TODO Auto-generated method stub
-		ve=map.getVehicles();
-	}
-	@Override
-	public void onReset(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-		ve=map.getVehicles();
-	}
-	@Override
-	public void onRegister(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-		ve=map.getVehicles();
-	}
-	@Override
-	public void onError(String err) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }

@@ -2,47 +2,46 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
-
 import simulator.control.Controller;
-import simulator.exceptions.IncorrectValues;
-import simulator.misc.Pair;
 import simulator.model.Event;
-import simulator.model.NewSetContClassEvent;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
+import simulator.model.simulatedOBJ.Road;
+import simulator.model.simulatedOBJ.Vehicle;
 
 public class ControlPanel extends JPanel implements TrafficSimObserver {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//mirar toolbar
+	private int time;
 	private Controller cpControl;
 	private JButton carga, changeContClass, runButton,stopButton, exitButton, wButton;
 	private JSpinner ticks;
 	private JToolBar jtb;
 	private boolean _stopped = false;
-	private boolean eventosCarg=false;
+	private List<Vehicle> ve; //changeCO2class
+	private List<Road>rd;//changeWeather
 	public ControlPanel(Controller _ctrl) {
+		_ctrl.addObserver(this);
 		cpControl=_ctrl;
 		this.setLayout(new BorderLayout());
 		//p1=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -67,9 +66,12 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		wButton = new JButton();
 		wButton.setIcon(icon);
 		wButton.setVisible(true);
+		wButton.setToolTipText("Changes the weather of a road");
 		wButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ChangeRoadWeatherClass(cpControl);
+				if(!cpControl.isCheckLoad()) JOptionPane.showMessageDialog(null, "No hay nada cargado todavia", "ERROR",  JOptionPane.WARNING_MESSAGE);
+				else if(rd.size()<1)JOptionPane.showMessageDialog(null, "No hay carreteras todavia", "ERROR",  JOptionPane.WARNING_MESSAGE);
+				else new ChangeRoadWeatherClass(cpControl,rd,time);
 			}
 		});	
 		jtb.add(wButton);
@@ -80,6 +82,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		exitButton = new JButton();
 		exitButton.setIcon(icon);
 		exitButton.setVisible(true);
+		exitButton.setToolTipText("Closes the simulator");
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				 int input = JOptionPane.showConfirmDialog(null,"Are you sure?", "!!",JOptionPane.YES_NO_OPTION);
@@ -94,6 +97,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		stopButton = new JButton();
 		stopButton.setIcon(icon);
 		stopButton.setVisible(true); 
+		stopButton.setToolTipText("Stops the simulator if it's running");
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ControlPanel.this.stop();
@@ -118,12 +122,16 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		runButton = new JButton();
 		runButton.setIcon(icon);
 		runButton.setVisible(true); 
+		runButton.setToolTipText("Run the simulator");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int value= Integer.parseInt(ticks.getValue().toString());
-				enableToolBar(false);
-				_stopped=false;
-				run_sim(value);
+				if(cpControl.isCheckLoad()) {
+					int value= Integer.parseInt(ticks.getValue().toString());
+					enableToolBar(false);
+					_stopped=false;
+					run_sim(value);
+				}
+				else JOptionPane.showMessageDialog(null, "No hay nada cargado todavia", "ERROR",  JOptionPane.WARNING_MESSAGE);
 			}
 		});	
 		jtb.add(runButton);
@@ -134,6 +142,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		carga = new JButton();
 		carga.setIcon(carpeta);
 		carga.setVisible(true); 
+		carga.setToolTipText("Charges a list of events");
 		carga.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser fc=new JFileChooser();
@@ -145,7 +154,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 					try {
 						InputStream targetStream = new FileInputStream(selectedFile);
 						cpControl.loadEvents(targetStream);
-						eventosCarg=true;
 					}
 				    catch (Exception e) {
 				    	JOptionPane.showMessageDialog(null, "Carga de eventos fallida (Error:"+e.toString() + ")", "ERROR",  JOptionPane.WARNING_MESSAGE);
@@ -193,12 +201,13 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		changeContClass = new JButton();
 		changeContClass.setIcon(hojita);
 		changeContClass.setVisible(true);
+		changeContClass.setToolTipText("Changes the contClass of a vehicle");
 		changeContClass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(cpControl.isCheckLoad()) {
-					new ChangeCO2ClassDialog(cpControl);
-				}
+				if(!cpControl.isCheckLoad()) JOptionPane.showMessageDialog(null, "No hay nada cargado todavia", "ERROR",  JOptionPane.WARNING_MESSAGE);
+				else if(ve.size()<1)JOptionPane.showMessageDialog(null, "No hay vehiculos todavia", "ERROR",  JOptionPane.WARNING_MESSAGE);
+				else new ChangeCO2ClassDialog(cpControl,ve,time);
 			}
 		});
 		jtb.add(changeContClass);
@@ -207,7 +216,9 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	@Override
 	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
 		// TODO Auto-generated method stub
-		
+		ve=map.getVehicles();
+		rd=map.getRoads();
+		this.time=time;
 	}
 
 	@Override
@@ -218,19 +229,25 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	@Override
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
 		// TODO Auto-generated method stub
-		
+		ve=map.getVehicles();
+		rd=map.getRoads();
+		this.time=time;
 	}
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
 		// TODO Auto-generated method stub
-		
+		ve=map.getVehicles();
+		rd=map.getRoads();
+		this.time=time;
 	}
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
 		// TODO Auto-generated method stub
-		
+		ve=map.getVehicles();
+		rd=map.getRoads();
+		this.time=time;
 	}
 
 	@Override

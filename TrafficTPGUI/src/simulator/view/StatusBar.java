@@ -1,15 +1,11 @@
 package simulator.view;
 
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
 import simulator.control.Controller;
@@ -21,10 +17,12 @@ import simulator.model.TrafficSimObserver;
 
 public class StatusBar extends JPanel implements TrafficSimObserver{
 
-	private Controller c;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel tbTicks, tbEvents;
 	public StatusBar(Controller c) {
-		this.c=c;
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		tbTicks=new JLabel();

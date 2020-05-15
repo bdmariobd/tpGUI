@@ -109,7 +109,7 @@ public class MapByRoadComponent extends JComponent implements TrafficSimObserver
 			g.setColor(_JUNCTION_COLOR);
 			g.fillOval(x1, y-6, 14, 14);
 			g.setColor(_JUNCTION_LABEL_COLOR);
-			g.drawString(r.getSrcJunc().getId(), x1+2, y-10); // fixeo del toc1
+			g.drawString(r.getSrcJunc().getId(), x1+2, y-10);
 			g.drawString(r.getDestJunc().getId(), x2+2, y-10);
 			int indice = r.getDestJunc().getGreenLightIndex();
 			if(indice!=-1 && r.equals(r.getDestJunc().getInRoads().get(indice))) g.setColor(_GREEN_LIGHT_COLOR);

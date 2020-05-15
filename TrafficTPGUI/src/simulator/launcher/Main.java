@@ -2,15 +2,12 @@ package simulator.launcher;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-
 import javax.swing.SwingUtilities;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -18,7 +15,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
 import simulator.control.Controller;
 import simulator.exceptions.IncorrectValues;
 import simulator.factories.Builder;
@@ -93,7 +89,7 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
 		cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg().desc("Ticks to the simulator’s main "
 				+ "loop (default value is 10).").build());
-		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().build());
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Switch into GUI mode and console mode").build());
 
 		return cmdLineOptions;
 	}
@@ -114,7 +110,10 @@ public class Main {
 	}
 	private static void guiORConsoleOption(CommandLine line) throws ParseException {
 		if(line.hasOption("m")) {
-			if(line.getOptionValue("m") == "console") gui=false;
+			if(line.getOptionValue("m").equals("console")) {
+				System.out.println("Console mode selected");
+				gui=false;
+			}
 		}
 	}
 
@@ -151,7 +150,20 @@ public class Main {
 	}
 	
 	private static void startBatchMode() throws IOException {
-		
+		InputStream in = new FileInputStream(new File(_inFile));
+		OutputStream out = _outFile == null ?
+		System.out : new FileOutputStream(new File(_outFile));
+		TrafficSimulator sim = new TrafficSimulator();
+		try {
+			Controller ctrl = new Controller(sim, _eventsFactory);
+			ctrl.loadEvents(in);
+			ctrl.run(_timeLimit, out); 
+		}
+		catch(IncorrectValues e) {
+			System.out.println("Simulation failed! ("+ e.toString()+")");
+		}
+		in.close();
+		System.out.println("Done!");
 	}
 
 	private static void start(String[] args) throws IOException {
@@ -190,6 +202,8 @@ public class Main {
 	// -i resources/examples/ex1.json -t 300
 	// -i resources/examples/ex1.json -o resources/tmp/ex1.out.json
 	// --help
+	// -m console : para usar el modo consola(obligatorio -i, opcional -o)
+	// nada o -m gui : usar modo GUI(opcional -i, no usa -o)
 
 	public static void main(String[] args) {
 		try {

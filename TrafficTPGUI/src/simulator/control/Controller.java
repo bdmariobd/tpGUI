@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,9 +14,6 @@ import simulator.factories.Factory;
 import simulator.model.Event;
 import simulator.model.TrafficSimObserver;
 import simulator.model.TrafficSimulator;
-import simulator.model.simulatedOBJ.Road;
-import simulator.model.simulatedOBJ.Vehicle;
-
 public class Controller {
 	
 	private TrafficSimulator sim;
@@ -67,12 +63,7 @@ public class Controller {
 	public void reset() {
 		sim.reset();
 	}
-	public List<Vehicle>getVehicles(){
-		return sim.getVehicles();
-	}
-	public List<Road>getRoads(){
-		return sim.getRoads();
-	}
+	
 	public void addObserver(TrafficSimObserver o) {
 		sim.addObserver(o);
 	}
@@ -90,7 +81,4 @@ public class Controller {
 	public boolean isCheckLoad() {
 		return checkLoad;
 	}
-	public int getTimeTick() {
-		return sim.getTimeTick();
-	};
 }
