@@ -104,7 +104,7 @@ public class Vehicle extends SimulatedObject implements Comparable<Vehicle> {
 		jo.put("distance",this.totalDistance);
 		jo.put("co2", this.totalContClass);
 		jo.put("class", this.contClass);
-		jo.put("status",this.status.toString()); //no sabemos si nos escribe el string o que
+		jo.put("status",this.status.toString());
 		jo.put("road", this.road.getId());
 		jo.put("location", this.location);
 		return jo;

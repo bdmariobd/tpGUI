@@ -45,6 +45,7 @@ public class StatusBar extends JPanel implements TrafficSimObserver{
 	}
 
 	@Override
+	//Tal como esta implementado, si se inicia ya cargado mediante argumento no se muestran los eventos iniciales
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
 		// TODO Auto-generated method stub
 		tbEvents.setText("Event added ("+e.toString()+")");

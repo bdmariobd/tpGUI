@@ -23,7 +23,7 @@ public class Junction extends SimulatedObject {
 	private LightSwitchingStrategy lStrategy;
 	private DequeuingStrategy dqStrategy;
 	private Map<Road, List<Vehicle>> entryRoadAndQueue;
-	int x,y; // coords para dibujar en la próxima práctica. UNUSED;
+	int x,y; 
 	public Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqeStrategy, int xCoor, int yCoor) throws IncorrectValues{ 
 		super(id);
 		if(lsStrategy==null || dqeStrategy==null) throw new IncorrectValues("La estrategia es null");

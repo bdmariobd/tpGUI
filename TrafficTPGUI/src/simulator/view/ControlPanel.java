@@ -31,7 +31,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//mirar toolbar
 	private int time;
 	private Controller cpControl;
 	private JButton carga, changeContClass, runButton,stopButton, exitButton, wButton;

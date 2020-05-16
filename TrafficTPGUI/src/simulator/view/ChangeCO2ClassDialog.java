@@ -90,7 +90,7 @@ public class ChangeCO2ClassDialog extends JDialog implements ActionListener{
 		JLabel j=new JLabel("CO2 Class:");
 		j.setLabelFor(cbCO2);
 		j.setVisible(true);
-		Integer [] types = {1,2,3,4,5,6,7,8,9,10};
+		Integer [] types = {0,1,2,3,4,5,6,7,8,9,10};
 		cbCO2=new JComboBox<Integer>(types);
 		JPanel pComboBoxCont= new JPanel(new FlowLayout());
 		pComboBoxCont.setVisible(true);
